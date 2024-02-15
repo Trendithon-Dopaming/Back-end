@@ -4,16 +4,19 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static jakarta.persistence.FetchType.*;
+
 @Getter
 @NoArgsConstructor
 @Entity
 public class Steps {
 
     @Id
-    @GeneratedValue
+    @Column(name = "step_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "post_id")
     private Pamings pamings;
 

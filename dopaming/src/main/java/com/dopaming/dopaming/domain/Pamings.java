@@ -8,14 +8,18 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.FetchType.*;
+
 @Getter
 @NoArgsConstructor
 @Entity
 public class Pamings {
 
     @Id
-    @GeneratedValue
-    private Long post_id;
+    @Column(name = "post_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column
     private String paming_title;
@@ -43,6 +47,10 @@ public class Pamings {
     @Column
     private String photo_name;
 
-    @OneToMany(mappedBy = "pamings")
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "user_id")
+    private Users users;
+
+    @OneToMany(mappedBy = "pamings", cascade = {PERSIST, REMOVE})
     private List<Steps> steps = new ArrayList<>();
 }
