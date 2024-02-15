@@ -1,6 +1,7 @@
 package com.dopaming.dopaming.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import static jakarta.persistence.CascadeType.*;
 
 @NoArgsConstructor
 @Entity
+@Getter
 public class Users {
 
     @Id
