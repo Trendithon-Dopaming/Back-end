@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 public class PamingSaves {
 
     @Id
-    @GeneratedValue
+    @Column(name = "paming_save_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

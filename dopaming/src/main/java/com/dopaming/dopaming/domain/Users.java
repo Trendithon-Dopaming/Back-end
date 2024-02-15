@@ -1,18 +1,21 @@
 package com.dopaming.dopaming.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static jakarta.persistence.CascadeType.*;
 
 @NoArgsConstructor
 @Entity
 public class Users {
 
     @Id
-    @GeneratedValue
-    private Long user_id;
+    @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column
     private String user_name;
@@ -22,4 +25,17 @@ public class Users {
 
     @Column
     private String password;
+
+    @OneToMany(mappedBy = "users", cascade = {REMOVE})
+    private List<Pamings> pamings = new ArrayList<>();
+
+    @OneToMany(mappedBy = "users", cascade = {REMOVE})
+    private List<PamingSaves> pamingSaves = new ArrayList<>();
+
+
+    public Users(String user_name, String user_email, String password) {
+        this.user_name = user_name;
+        this.user_email = user_email;
+        this.password = password;
+    }
 }
