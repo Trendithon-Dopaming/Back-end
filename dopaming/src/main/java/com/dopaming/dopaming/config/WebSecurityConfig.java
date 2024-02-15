@@ -38,10 +38,10 @@ public class WebSecurityConfig {
                         .requestMatchers("/parmings").hasRole("USER")
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/user").permitAll()
+                        .requestMatchers("/test").permitAll()
                         .anyRequest().authenticated()
                 )
                 .logout(logout -> logout.permitAll());
-                //.addFilterBefore(new JwtFilter(memberService, secretKey), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

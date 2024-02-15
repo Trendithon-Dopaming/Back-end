@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Dopaming-BE.iml" filepath="$PROJECT_DIR$/.idea/Dopaming-BE.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dopaming.main.iml" filepath="$PROJECT_DIR$/.idea/modules/dopaming.main.iml" />
     </modules>
   </component>
 </project>
