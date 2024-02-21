@@ -1,6 +1,7 @@
 package com.dopaming.dopaming.controller;
 
 import com.dopaming.dopaming.requestDto.LoginDto;
+import com.dopaming.dopaming.requestDto.PasswordDTO;
 import com.dopaming.dopaming.requestDto.RegisterDto;
 import com.dopaming.dopaming.security.Util;
 import com.dopaming.dopaming.service.UsersService;
@@ -38,12 +39,19 @@ public class UsersController {
         Cookie cookie  = new Cookie("token", token);
         cookie.setPath("/");
         cookie.setSecure(true);
-        cookie.setMaxAge(86400);
         cookie.setHttpOnly(true);
 
         HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
         response.addCookie(cookie);
 
+        return "success";
+    }
+
+    @PatchMapping("/user/password")
+    public String  editPassword(@RequestBody PasswordDTO dto,
+                             @CookieValue(name = "token") String token) {
+        Long userId = util.getUserId(token, secretKey);
+        usersService.editPassword(userId, dto);
         return "success";
     }
 

@@ -34,6 +34,9 @@ public class Users {
     @OneToMany(mappedBy = "users", cascade = {REMOVE})
     private List<PamingSaves> pamingSaves = new ArrayList<>();
 
+    public void changePassword(String password) {
+        this.password = password;
+    }
 
     public Users(String user_name, String user_email, String password) {
         this.user_name = user_name;
