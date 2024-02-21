@@ -28,12 +28,18 @@ public class UsersService {
     private String secretKey;
 
     @Transactional
-    public void join(RegisterDto dto) {
+    public String join(RegisterDto dto) {
+        Optional<Users> user = usersRepository.findUsersByUser_email(dto.getEmail());
+
+        if(user.isPresent()) return "duplicate";
+
         usersRepository.save(new Users(
                         dto.getNickname(),
                         dto.getEmail(),
                         encoder.encode(dto.getPassword()))
         );
+
+        return "success";
     }
 
     public String login(LoginDto dto) {

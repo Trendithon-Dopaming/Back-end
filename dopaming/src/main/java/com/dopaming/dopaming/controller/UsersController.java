@@ -23,8 +23,8 @@ public class UsersController {
     private final UsersService usersService;
 
     @PostMapping("/user")
-    public void register(@RequestBody RegisterDto dto) {
-        usersService.join(dto);
+    public String register(@RequestBody RegisterDto dto) {
+        return usersService.join(dto);
     }
 
     @PostMapping("/login")
