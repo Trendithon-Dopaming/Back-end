@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: jdbc:mariadb://localhost:3306/dopaming
+    url: jdbc:mariadb://dopaming-rds.c9a2kym82u93.ap-northeast-2.rds.amazonaws.com:3306/dopaming?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     driver-class-name: org.mariadb.jdbc.Driver
     username: root
-    password: root
+    password: root1234
 
   jpa:
     hibernate:
