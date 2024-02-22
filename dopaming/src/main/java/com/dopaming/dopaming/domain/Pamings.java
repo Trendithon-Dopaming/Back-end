@@ -1,5 +1,6 @@
 package com.dopaming.dopaming.domain;
 
+import com.dopaming.dopaming.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ import static jakarta.persistence.FetchType.*;
 @Getter
 @NoArgsConstructor
 @Entity
-public class Pamings {
+public class Pamings extends BaseEntity {
 
     @Id
     @Column(name = "post_id")

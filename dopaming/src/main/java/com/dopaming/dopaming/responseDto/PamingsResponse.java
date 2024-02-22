@@ -61,4 +61,29 @@ public class PamingsResponse {
 
         private boolean success;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetSavedPamingListDTO {
+        private List<PamingsResponse.GetSavedPamingDTO> pamings;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetSavedPamingDTO {
+
+        private Long paming_id;
+
+        private String paming_title;
+
+        private String photo_url;
+
+        private String start_date;
+
+        private String end_date;
+    }
 }
