@@ -74,8 +74,15 @@ public class PamingsService {
                 .orElseThrow(() -> new RestApiException(UserErrorCode.INACTIVE_USER));
 
         List<Pamings> pamingList = pamingsRepository.findAllByUsers(user);
+        LocalDateTime currentDate = LocalDateTime.now();
 
-        List<PamingsResponse.GetOngoingPamingDTO> pamingDTOList = pamingList.stream()
+        List<Pamings> ongoingPamings = pamingList.stream()
+                .filter(paming -> (paming.getStart_date().isBefore(currentDate) || paming.getStart_date().isEqual(currentDate)) &&
+                                (paming.getEnd_date().isAfter(currentDate) || paming.getEnd_date().isEqual(currentDate))
+                )
+                .toList();
+
+        List<PamingsResponse.GetOngoingPamingDTO> pamingDTOList = ongoingPamings.stream()
                 .map(pamings -> {
                     List<Steps> stepsList = pamings.getSteps();
 
@@ -138,11 +145,15 @@ public class PamingsService {
                 .build()), pageable, pamingSavePage.getTotalElements());
     }
 
-    public PamingsResponse.GetSavedPamingListDTO getExpiredPamings(Long userId) {
+    public PamingsResponse.GetSavedPamingListDTO getExpiredPamingsV1(Long userId) {
         Users user = usersRepository.findById(userId).orElseThrow(() -> new RestApiException(UserErrorCode.INACTIVE_USER));
         List<Pamings> pamingList = pamingsRepository.findAllByUsers(user);
         LocalDateTime currentDate = LocalDateTime.now();
-        List<Pamings> expiredPamings = pamingList.stream().filter(paming -> paming.getEnd_date().isBefore(currentDate)).sorted(Comparator.comparing(Pamings::getEnd_date).reversed()).limit(3).toList();
+        List<Pamings> expiredPamings = pamingList.stream().
+                filter(paming -> paming.getEnd_date().isBefore(currentDate))
+                .sorted(Comparator.comparing(Pamings::getEnd_date).reversed())
+                .limit(3)
+                .toList();
         List<PamingsResponse.GetSavedPamingDTO> expiredPamingDTO = expiredPamings.stream()
                 .map(paming -> PamingsResponse.GetSavedPamingDTO.builder()
                         .paming_id(paming.getId())
@@ -153,5 +164,50 @@ public class PamingsService {
                         .build())
                 .collect(Collectors.toList());
         return PamingsResponse.GetSavedPamingListDTO.builder().pamings(expiredPamingDTO).build();
+    }
+
+    public PamingsResponse.GetOngoingPamingListDTO getExpiredPamingsV2(Long userId) {
+
+        Users user = usersRepository.findById(userId)
+                .orElseThrow(() -> new RestApiException(UserErrorCode.INACTIVE_USER));
+
+        List<Pamings> pamingList = pamingsRepository.findAllByUsers(user);
+        LocalDateTime currentDate = LocalDateTime.now();
+
+        List<Pamings> expiredPamings = pamingList.stream().
+                filter(paming -> paming.getEnd_date().isBefore(currentDate))
+                .sorted(Comparator.comparing(Pamings::getEnd_date).reversed())
+                .toList();
+
+        List<PamingsResponse.GetOngoingPamingDTO> pamingDTOList = expiredPamings.stream()
+                .map(pamings -> {
+                    List<Steps> stepsList = pamings.getSteps();
+
+                    List<PamingsResponse.GetStepDTO> stepsDTOList = stepsList.stream()
+                            .map(step -> PamingsResponse.GetStepDTO.builder()
+                                    .step(step.getStep())
+                                    .content(step.getContent())
+                                    .success(step.isSuccess())
+                                    .build())
+                            .collect(Collectors.toList());
+
+                    return PamingsResponse.GetOngoingPamingDTO.builder()
+                            .paming_id(pamings.getId())
+                            .paming_title(pamings.getPaming_title())
+                            .category(pamings.getCategory())
+                            .photo_url(pamings.getPhoto_name())
+                            .start_date(pamings.getStart_date().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
+                            .end_date(pamings.getEnd_date().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
+                            .remaining_period(getRemainingPeriod(pamings.getEnd_date()))
+                            .cleared_step(pamings.getSteps().stream().filter(Steps::isSuccess).count())
+                            .unclear_step(pamings.getSteps().stream().filter(step -> !step.isSuccess()).count())
+                            .steps(stepsDTOList)
+                            .build();
+                })
+                .collect(Collectors.toList());
+
+        return PamingsResponse.GetOngoingPamingListDTO.builder()
+                .pamings(pamingDTOList)
+                .build();
     }
 }
