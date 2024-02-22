@@ -113,13 +113,36 @@ public class PamingsController {
     }
 
     /**
-     * [GET] /pamings/saved * 지난 파밍로그 조회 v1 (나의 파밍에서 3개 조회) * * @param token 토큰 * @return
+     * [GET] /pamings/expired/v1
+     * 지난 파밍로그 조회 v1
+     *
+     * @param token 토큰
+     * @return
      */
     @GetMapping("/expired/v1")
-    public ResponseEntity<PamingsResponse.GetSavedPamingListDTO> getExpiredRecent(@CookieValue(name = "token") String token) {
+    public ResponseEntity<PamingsResponse.GetSavedPamingListDTO> getExpiredV1(@CookieValue(name = "token") String token) {
         Long userId = util.getUserId(token, secretKey);
-        PamingsResponse.GetSavedPamingListDTO pamingList = pamingsService.getExpiredPamings(userId);
+        PamingsResponse.GetSavedPamingListDTO pamingList = pamingsService.getExpiredPamingsV1(userId);
         log.info("저장 팜 조회: user={}", userId);
+        return new ResponseEntity<>(pamingList, HttpStatus.OK);
+    }
+
+    /**
+     * [GET] /pamings/expired/v2
+     * 지난 파밍로그 조회 v2
+     *
+     * @param token 토큰
+     * @return
+     */
+    @GetMapping("/expired/v2")
+    public ResponseEntity<PamingsResponse.GetOngoingPamingListDTO> getExpiredV2(@CookieValue(name = "token") String token) {
+
+        Long userId = util.getUserId(token, secretKey);
+
+        PamingsResponse.GetOngoingPamingListDTO pamingList = pamingsService.getExpiredPamingsV2(userId);
+
+        log.info("진행 중인 파밍로그 조회: user={}", userId);
+
         return new ResponseEntity<>(pamingList, HttpStatus.OK);
     }
 }
