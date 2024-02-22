@@ -23,6 +23,11 @@ public class UsersController {
 
     private final UsersService usersService;
 
+    @GetMapping("/healthy")
+    public String healthy() {
+        return ".";
+    }
+
     @PostMapping("/user")
     public String register(@RequestBody RegisterDto dto) {
         return usersService.join(dto);
