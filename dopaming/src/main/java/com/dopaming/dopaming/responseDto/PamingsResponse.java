@@ -1,7 +1,9 @@
 package com.dopaming.dopaming.responseDto;
 
+import com.dopaming.dopaming.domain.Category;
 import com.dopaming.dopaming.domain.Steps;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,7 +28,13 @@ public class PamingsResponse {
     @AllArgsConstructor
     public static class GetOngoingPamingDTO {
 
+        private Long paming_id;
+
         private String paming_title;
+
+        private Category category;
+
+        private String photo_url;
 
         private String start_date;
 
@@ -38,6 +46,19 @@ public class PamingsResponse {
 
         private Long unclear_step;
 
-        private String[] step_contents;
+        private List<PamingsResponse.GetStepDTO> steps;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetStepDTO {
+
+        private int step;
+
+        private String content;
+
+        private boolean success;
     }
 }

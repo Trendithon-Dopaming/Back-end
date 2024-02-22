@@ -30,7 +30,7 @@ public class PamingsController {
      * @return
      */
     @GetMapping("/ongoing")
-    public ResponseEntity<PamingsResponse.GetOngoingPamingListDTO> getProfileAlarm(@CookieValue String token) {
+    public ResponseEntity<PamingsResponse.GetOngoingPamingListDTO> getProfileAlarm(@CookieValue(name = "token") String token) {
 
         Long userId = util.getUserId(token, secretKey);
 
