@@ -1,8 +1,7 @@
 package com.dopaming.dopaming.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -53,4 +52,32 @@ public class Pamings {
 
     @OneToMany(mappedBy = "pamings", cascade = {PERSIST, REMOVE})
     private List<Steps> steps = new ArrayList<>();
+
+    public void setPaming_title(String paming_title){
+        this.paming_title = paming_title;
+    }
+    public void setStart_date(LocalDateTime start_date){
+        this.start_date = start_date;
+    }
+    public void setEnd_date(LocalDateTime end_date){
+        this.end_date = end_date;
+    }
+    public void setInfo(String info) {
+        this.info = info;
+    }
+    public void setPub_priv(boolean pub_priv) {
+        this.pub_priv = pub_priv;
+    }
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+    public void setRegion(Region region) {
+        this.region = region;
+    }
+    public void setPhoto_name(String photo_name) {
+        this.photo_name = photo_name;
+    }
+    public void setUsers(Users users) {
+        this.users = users;
+    }
 }
