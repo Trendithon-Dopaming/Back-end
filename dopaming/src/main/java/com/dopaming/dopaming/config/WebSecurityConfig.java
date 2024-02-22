@@ -34,8 +34,8 @@ public class WebSecurityConfig {
                 .cors(Customizer -> Customizer.configurationSource(corsConfigurationSource()))
                 .csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/parmings/**").hasRole("USER")
-                        .requestMatchers("/parmings").hasRole("USER")
+                        .requestMatchers("/pamings/**").hasRole("USER")
+                        .requestMatchers("/pamings").hasRole("USER")
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/user").permitAll()
                         .requestMatchers("/test").permitAll()
