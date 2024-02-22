@@ -2,6 +2,7 @@ package com.dopaming.dopaming.service;
 
 import com.dopaming.dopaming.domain.Pamings;
 import com.dopaming.dopaming.repository.PamingsRepository;
+import com.dopaming.dopaming.repository.StepsRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -37,6 +38,7 @@ public class PamingsService {
     private final PamingsRepository pamingsRepository;
     private final UsersRepository usersRepository;
     private final PamingSavesRepsitory pamingSavesRepsitory;
+    private final StepsRepository stepsRepository;
 
     public List<Pamings> getAllPamings(Long userId) {
         return pamingsRepository.findAll();
@@ -209,5 +211,17 @@ public class PamingsService {
         return PamingsResponse.GetOngoingPamingListDTO.builder()
                 .pamings(pamingDTOList)
                 .build();
+    }
+
+    @Transactional
+    public String donePamingStep(Long pamingsId, int step) {
+        List<Steps> steps = stepsRepository.findAllByPamingsIdAndStep(pamingsId, step);
+
+        if(steps.isEmpty() || steps.size() >= 2) {
+            return "fail";
+        }
+
+        steps.get(0).setSuccess(true);
+        return "success";
     }
 }
