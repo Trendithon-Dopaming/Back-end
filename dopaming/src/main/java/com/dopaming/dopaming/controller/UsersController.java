@@ -52,6 +52,13 @@ public class UsersController {
         return "success";
     }
 
+    @GetMapping("/user/check/password")
+    public boolean checkPassword(@CookieValue(name = "token") String token,
+                                @RequestParam String password) {
+        Long userId = util.getUserId(token, secretKey);
+        return usersService.checkPassword(userId, password);
+    }
+
     @PatchMapping("/user/password")
     public String  editPassword(@RequestBody PasswordDTO dto,
                              @CookieValue(name = "token") String token) {

@@ -55,6 +55,13 @@ public class UsersService {
         return token;
     }
 
+    public boolean checkPassword(Long userId, String password) {
+        Users users = usersRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Could not found id : " + userId));
+
+        return encoder.matches(password, users.getPassword());
+    }
+
     @Transactional
     public void editPassword(Long userId, PasswordDTO dto) {
         Users users = usersRepository.findById(userId)
