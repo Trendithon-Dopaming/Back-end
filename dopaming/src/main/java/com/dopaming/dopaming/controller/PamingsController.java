@@ -145,4 +145,12 @@ public class PamingsController {
 
         return new ResponseEntity<>(pamingList, HttpStatus.OK);
     }
+
+    @PatchMapping("/pamings/{pamingId}/step/{step}")
+    public ResponseEntity<String> doneStep(
+            @PathVariable("pamingId") Long pamingId,
+            @PathVariable("step") int step) {
+        String status = pamingsService.donePamingStep(pamingId, step);
+        return new ResponseEntity<>(status, HttpStatus.OK);
+    }
 }

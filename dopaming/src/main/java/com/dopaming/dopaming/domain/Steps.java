@@ -28,4 +28,8 @@ public class Steps {
 
     @Column
     private String content;
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
 }
