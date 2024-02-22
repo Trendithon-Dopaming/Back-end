@@ -39,6 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
         // 토큰 정보가 잘못됨
         try {
             if (!authorization.startsWith("Bearer ") || authorization.split(" ")[1].equals("undefined")) {
+                System.out.println("error");
                 filterChain.doFilter(request, response);
                 return;
             } else {
