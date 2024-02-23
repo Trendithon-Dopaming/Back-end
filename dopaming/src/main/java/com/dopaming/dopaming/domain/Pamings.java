@@ -80,5 +80,9 @@ public class Pamings extends BaseEntity {
     }
     public void setUsers(Users users) {
         this.users = users;
+
+        if(!users.getPamings().contains(this)) {
+            users.getPamings().add(this);
+        }
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -47,12 +48,12 @@ public class PamingsController {
     }
 
     @PostMapping("/pamings")
-    public ResponseEntity<Pamings> createPaming(@RequestBody Pamings pamings,
-                                                @CookieValue(name = "token") String token) {
+    public ResponseEntity<Pamings> createPaming(
+            @RequestPart(value = "file", required = false) List<MultipartFile> file,
+            @RequestPart(value = "dto") Pamings pamings,
+            @CookieValue(name = "token") String token) {
         Long userId = util.getUserId(token, secretKey);
-        Users users = new Users();
-        pamings.setUsers(users);
-        Pamings createdPaming = pamingsService.createPaming(pamings);
+        Pamings createdPaming = pamingsService.createPaming(userId, pamings);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPaming);
     }
 
