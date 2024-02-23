@@ -1,12 +1,13 @@
-package com.dopaming.dopaming.responseDto;
+package com.dopaming.dopaming.requestDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class UserInfoDto {
-    private String email;
 
     private String name;
 }
