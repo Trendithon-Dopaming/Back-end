@@ -6,12 +6,11 @@ import com.dopaming.dopaming.repository.UsersRepository;
 import com.dopaming.dopaming.requestDto.LoginDto;
 import com.dopaming.dopaming.requestDto.PasswordDTO;
 import com.dopaming.dopaming.requestDto.RegisterDto;
-import com.dopaming.dopaming.responseDto.UserInfoDto;
+import com.dopaming.dopaming.requestDto.UserInfoDto;
+import com.dopaming.dopaming.responseDto.UserInfoResDto;
 import com.dopaming.dopaming.security.Util;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,11 +70,11 @@ public class UsersService {
         users.changePassword(encoder.encode(dto.getPassword()));
     }
 
-    public UserInfoDto userInformation(Long userId) {
+    public UserInfoResDto userInformation(Long userId) {
         Users users = usersRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Could not found id : " + userId));
 
-        return new UserInfoDto(users.getUser_email(), users.getUser_name());
+        return new UserInfoResDto(users.getUser_email(), users.getUser_name());
     }
 
     @Transactional
@@ -83,21 +82,7 @@ public class UsersService {
         Users users = usersRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Could not found id : " + userId));
 
-        if(!users.getUser_email().equals(dto.getEmail())) {
-            Optional<Users> usersByUserEmail = usersRepository.findUsersByUser_email(dto.getEmail());
-
-            if(usersByUserEmail.isPresent()) return "email duplicate";
-
-            users.setUser_email(dto.getEmail());
-        }
-
-        if(!users.getUser_name().equals(dto.getName())) {
-            Optional<Users> usersByUserName = usersRepository.findUsersByUser_name(dto.getName());
-
-            if(usersByUserName.isPresent()) return "name duplicate";
-
-            users.setUser_name(dto.getName());
-        }
+        users.setUser_name(dto.getName());
 
         return "success";
     }

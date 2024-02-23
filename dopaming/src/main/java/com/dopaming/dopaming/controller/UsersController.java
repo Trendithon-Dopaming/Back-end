@@ -3,7 +3,8 @@ package com.dopaming.dopaming.controller;
 import com.dopaming.dopaming.requestDto.LoginDto;
 import com.dopaming.dopaming.requestDto.PasswordDTO;
 import com.dopaming.dopaming.requestDto.RegisterDto;
-import com.dopaming.dopaming.responseDto.UserInfoDto;
+import com.dopaming.dopaming.requestDto.UserInfoDto;
+import com.dopaming.dopaming.responseDto.UserInfoResDto;
 import com.dopaming.dopaming.security.Util;
 import com.dopaming.dopaming.service.UsersService;
 import jakarta.servlet.http.Cookie;
@@ -69,7 +70,7 @@ public class UsersController {
     }
 
     @GetMapping("/user/info")
-    public UserInfoDto myInfo(@CookieValue(name = "token") String token) {
+    public UserInfoResDto myInfo(@CookieValue(name = "token") String token) {
         Long userId = util.getUserId(token, secretKey);
         return usersService.userInformation(userId);
     }
