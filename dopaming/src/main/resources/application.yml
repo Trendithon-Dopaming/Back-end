@@ -15,3 +15,16 @@ spring:
 
 jwt:
   secret: "likeliontrendithondopaming1teamjwtsecretkey"
+
+cloud:
+  aws:
+    s3:
+      bucket: "seumu-s3-bucket"
+    credentials:
+      access-key: "AKIAWAJPXSQG5R673X6M"
+      secret-key: "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"
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false

@@ -1,10 +1,15 @@
 package com.dopaming.dopaming.service;
 
+import com.amazonaws.services.kms.model.NotFoundException;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.dopaming.dopaming.domain.Pamings;
 import com.dopaming.dopaming.repository.PamingsRepository;
 import com.dopaming.dopaming.repository.StepsRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +28,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -39,6 +45,28 @@ public class PamingsService {
     private final UsersRepository usersRepository;
     private final PamingSavesRepsitory pamingSavesRepsitory;
     private final StepsRepository stepsRepository;
+    private final AmazonS3 amazonS3;
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
+
+    public String uploadToS3(MultipartFile file, String nickname) throws IOException {
+
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        String current_date = now.format(dateTimeFormatter);
+
+        String fileName = nickname + current_date;
+
+        ObjectMetadata metadata = new ObjectMetadata();
+
+        metadata.setContentLength(file.getSize());
+        metadata.setContentType(file.getContentType());
+
+        amazonS3.putObject(bucket, fileName, file.getInputStream(), metadata);
+        System.out.println("사진 URL" + amazonS3.getUrl(bucket, fileName));
+
+        return fileName;
+    }
 
     public List<Pamings> getAllPamings(Long userId) {
         return pamingsRepository.findAll();
@@ -48,7 +76,11 @@ public class PamingsService {
         return pamingsRepository.findById(id).orElse(null);
     }
 
-    public Pamings createPaming(Pamings pamings) {
+    public Pamings createPaming(Long userId, Pamings pamings) {
+        Users users = usersRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Could not found id : " + userId));
+
+        pamings.setUsers(users);
         return pamingsRepository.save(pamings);
     }
 
